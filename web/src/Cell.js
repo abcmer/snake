@@ -22,7 +22,7 @@ class Cell extends Component {
     }
 
     return (
-      <div className="grid-item" style={cellStyle()}></div>
+      <div id={this.props.id} className="grid-item" style={cellStyle()}></div>
     );
   }
 }

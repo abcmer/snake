@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 
 import Grid from './Grid';
-import logo from './logo.svg';
 import './App.css';
 
 class App extends Component {
