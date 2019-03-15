@@ -8,8 +8,8 @@ class Grid extends Component {
     this.state = {
       gridSize: [20, 20],
       snake: [ [10, 10], [10, 9]],
+      foodCoords: [],
       mouthPos: [10, 10],
-      tailPos: [10, 9],
       snakeLength: 1,
       direction: null,
       matrix: []
@@ -19,13 +19,12 @@ class Grid extends Component {
 
   componentDidMount() {
     document.addEventListener('keydown', this.handleKeyDown)
-    this.setMatrix(this.state.gridSize, this.state.snake)
+    this.initializeMatrix(this.state.gridSize, this.state.snake)
   }
     
   handleKeyDown = (event) => {
       if (event.key.startsWith('Arrow')) {
         let matrix = this.state.matrix;
-        matrix[this.state.mouthPos[0]][this.state.mouthPos[1]] = false;
         let newDirection
 
         let direction = this.state.direction;
@@ -52,15 +51,16 @@ class Grid extends Component {
       }
   }
 
-  setMatrix(dimensions, snake) {
+  initializeMatrix(dimensions, snake) {
     let matrix = Array(dimensions[0]).fill().map((_,r) => {
       return Array(dimensions[1]).fill().map((_,c) => {
-          return false
+          return 0 // 0 = background
         })
       }
     )
+    matrix = this.setRandomFoodOnMatrix(matrix)
     snake.forEach(seg => {
-      matrix = this.toggleCell(matrix,seg)
+      matrix = this.setCell(matrix,seg,1)
     })
 
     this.setState({
@@ -72,22 +72,25 @@ class Grid extends Component {
   getClearMatrix(dimensions) {
     let matrix = Array(dimensions[0]).fill().map((_,r) => {
       return Array(dimensions[1]).fill().map((_,c) => {
-          return false
+          return 0
         })
       }
     )
     return matrix
   }
-
-  setSnakeOnMatrix(matrix, snake) {
+  
+  reInitializeMatrix(matrix, snake, foodCoords) {
     snake.forEach(seg => {
-      matrix = this.toggleCell(matrix,seg)
+      matrix = this.setCell(matrix,seg,1)
     })
+
+    // Set food
+    matrix = this.setFoodCoordsOnMatrix(matrix, foodCoords)
     return matrix
   }
-
-  toggleCell(matrix, coordinates) {
-    matrix[coordinates[0]][coordinates[1]] = true
+    
+  setCell(matrix, coordinates, value) {
+    matrix[coordinates[0]][coordinates[1]] = value
     return matrix
   }
 
@@ -97,30 +100,30 @@ class Grid extends Component {
 
   moveSnake(direction) {    
     let snake = this.state.snake;
-    const mouth = snake[0]
+    const mouthPos = snake[0]
 
     let matrix = this.state.matrix;    
     snake.pop(0)
     let newMouth
 
     if (direction === 'Right') {
-      newMouth = [mouth[0], mouth[1] + 1]
+      newMouth = [mouthPos[0], mouthPos[1] + 1]
     }
     if (direction === 'Left') {          
-      newMouth = [mouth[0], mouth[1] - 1]          
+      newMouth = [mouthPos[0], mouthPos[1] - 1]          
     }   
     if (direction === 'Up') {          
-      newMouth = [mouth[0] - 1, mouth[1]]          
+      newMouth = [mouthPos[0] - 1, mouthPos[1]]          
     }  
     if (direction === 'Down') {          
-      newMouth = [mouth[0] + 1, mouth[1]]
+      newMouth = [mouthPos[0] + 1, mouthPos[1]]
     }
     
     newMouth = this.adjustForOutOfBounds(newMouth, this.state.gridSize)
 
     console.log('newMouth', newMouth);
     snake.unshift(newMouth)
-    matrix = this.setSnakeOnMatrix(this.getClearMatrix([20,20]), snake)
+    matrix = this.reInitializeMatrix(this.getClearMatrix(this.state.gridSize), snake, this.state.foodCoords)
     this.setState({
       matrix: matrix,
       snake: snake
@@ -145,6 +148,20 @@ class Grid extends Component {
     return mouthPos
   }
 
+  setRandomFoodOnMatrix(matrix) {
+    const foodCoords = [Math.floor(Math.random() * 20), Math.floor(Math.random() * 20)]
+    this.setState({
+      foodCoords: foodCoords
+    })
+    matrix[foodCoords[0]][foodCoords[1]] = 2   
+    return matrix
+  }  
+
+  setFoodCoordsOnMatrix(matrix, foodCoords) {
+    matrix[foodCoords[0]][foodCoords[1]] = 2   
+    return matrix
+  }
+
   render() {
 
     const dimensions = [20, 20]
@@ -155,8 +172,8 @@ class Grid extends Component {
     
     const getGridItems = (matrix) => {
       return matrix.map((row, rIndex) => {
-        return row.map((isActiveCell, cIndex) => {
-          return <Cell row={rIndex} col={cIndex} active={isActiveCell} />
+        return row.map((cellValue, cIndex) => {
+          return <Cell row={rIndex} col={cIndex} cellValue={cellValue} />
         })
       })
     }
