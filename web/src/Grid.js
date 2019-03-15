@@ -6,9 +6,10 @@ class Grid extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      gridSize: [20, 20],
       snake: [ [10, 10], [10, 9]],
-      snakeMouthPos: [10, 10],
-      snakeTailPos: [10, 9],
+      mouthPos: [10, 10],
+      tailPos: [10, 9],
       snakeLength: 1,
       direction: null,
       matrix: []
@@ -18,13 +19,13 @@ class Grid extends Component {
 
   componentDidMount() {
     document.addEventListener('keydown', this.handleKeyDown)
-    this.setMatrix([20, 20], this.state.snake)
+    this.setMatrix(this.state.gridSize, this.state.snake)
   }
     
   handleKeyDown = (event) => {
       if (event.key.startsWith('Arrow')) {
         let matrix = this.state.matrix;
-        matrix[this.state.snakeMouthPos[0]][this.state.snakeMouthPos[1]] = false;
+        matrix[this.state.mouthPos[0]][this.state.mouthPos[1]] = false;
         let newDirection
 
         let direction = this.state.direction;
@@ -82,7 +83,6 @@ class Grid extends Component {
     snake.forEach(seg => {
       matrix = this.toggleCell(matrix,seg)
     })
-    debugger
     return matrix
   }
 
@@ -115,6 +115,9 @@ class Grid extends Component {
     if (direction === 'Down') {          
       newMouth = [mouth[0] + 1, mouth[1]]
     }
+    
+    newMouth = this.adjustForOutOfBounds(newMouth, this.state.gridSize)
+
     console.log('newMouth', newMouth);
     snake.unshift(newMouth)
     matrix = this.setSnakeOnMatrix(this.getClearMatrix([20,20]), snake)
@@ -122,6 +125,24 @@ class Grid extends Component {
       matrix: matrix,
       snake: snake
     })
+  }
+
+  adjustForOutOfBounds(mouthPos, gridSize) {
+    // TODO dynamically use state.gridSize
+    
+    if (mouthPos[0] === -1) {
+      // Adjust for out of bounds Up
+      mouthPos[0] = gridSize[0] -1
+    } else if (mouthPos[0] === gridSize[0]) {
+      // Adjust for out of bounds Down
+      mouthPos[0] = 0
+    } else if (mouthPos[1] === -1) {
+      // Adjust for out of bounds Left
+      mouthPos[1] = gridSize[1] -1
+    } else if (mouthPos[1] === gridSize[1]) {
+      mouthPos[1] = 0
+    }
+    return mouthPos
   }
 
   render() {
