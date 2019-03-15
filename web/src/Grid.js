@@ -6,8 +6,9 @@ class Grid extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      snakeMouth:169,
+      snake: [ [10, 10], [10, 9]],
       snakeMouthPos: [10, 10],
+      snakeTailPos: [10, 9],
       snakeLength: 1,
       direction: null,
       matrix: []
@@ -17,64 +18,110 @@ class Grid extends Component {
 
   componentDidMount() {
     document.addEventListener('keydown', this.handleKeyDown)
-    this.setMatrix([20, 20])
+    this.setMatrix([20, 20], this.state.snake)
   }
     
   handleKeyDown = (event) => {
       if (event.key.startsWith('Arrow')) {
         let matrix = this.state.matrix;
         matrix[this.state.snakeMouthPos[0]][this.state.snakeMouthPos[1]] = false;
-        this.setState({
-          direction: event.key.split('Arrow')[1]
-        })
+        let newDirection
+
+        let direction = this.state.direction;
+
         console.log(this.state.direction);  
-        let snakeMouthPos = this.state.snakeMouthPos;  
-        if (this.state.direction === 'Right') {          
-          snakeMouthPos[1] += 1;          
-        }
-        if (this.state.direction === 'Left') {          
-          snakeMouthPos[1] -= 1;          
-        }   
-        if (this.state.direction === 'Up') {          
-          snakeMouthPos[0] -= 1;          
-        }  
-        if (this.state.direction === 'Down') {          
-          snakeMouthPos[0] += 1;
+                
+        if (event.key.split('Arrow')[1] === 'Right' && direction !== 'Left') {
+          newDirection = event.key.split('Arrow')[1]          
+        } else if (event.key.split('Arrow')[1] === 'Left' && direction !== 'Right') {          
+          newDirection = event.key.split('Arrow')[1]          
+        } else if (event.key.split('Arrow')[1] === 'Up' && direction !== 'Down') { 
+          newDirection = event.key.split('Arrow')[1]          
+        } else if (event.key.split('Arrow')[1] === 'Down' && direction !== 'Up') {          
+          newDirection = event.key.split('Arrow')[1]          
+        } else {
+          newDirection = direction
         }
 
-        // Set mouth cell active
-        matrix[this.state.snakeMouthPos[0]][this.state.snakeMouthPos[1]] = true;
-
-        console.log(this.state.snakeMouthPos)  
         this.setState({
-          snakeMouthPos: snakeMouthPos,
-          matrix: matrix
-        })               
+          direction: newDirection
+        })
+
+        this.moveSnake(newDirection)         
       }
-
-
-
-      // rowIndex = this.state.snakeMouthPos[0];
-      // colIndex = this.state.snakeMouthPos[1];
-      // matrix[row][col] = true;
   }
 
-  setMatrix(dimensions) {
-    const matrix = Array(dimensions[0]).fill().map((_,r) => {
+  setMatrix(dimensions, snake) {
+    let matrix = Array(dimensions[0]).fill().map((_,r) => {
       return Array(dimensions[1]).fill().map((_,c) => {
           return false
         })
       }
     )
-    // Set initial snake position
-    matrix[10][10] = true
+    snake.forEach(seg => {
+      matrix = this.toggleCell(matrix,seg)
+    })
+
     this.setState({
-      matrix: matrix
+      matrix: matrix,
+      snake: snake
     })
   }
 
-  setCellActive(coordinates) {
+  getClearMatrix(dimensions) {
+    let matrix = Array(dimensions[0]).fill().map((_,r) => {
+      return Array(dimensions[1]).fill().map((_,c) => {
+          return false
+        })
+      }
+    )
+    return matrix
+  }
+
+  setSnakeOnMatrix(matrix, snake) {
+    snake.forEach(seg => {
+      matrix = this.toggleCell(matrix,seg)
+    })
     debugger
+    return matrix
+  }
+
+  toggleCell(matrix, coordinates) {
+    matrix[coordinates[0]][coordinates[1]] = true
+    return matrix
+  }
+
+  growSnake() {
+    debugger;
+  }
+
+  moveSnake(direction) {    
+    let snake = this.state.snake;
+    const mouth = snake[0]
+
+    let matrix = this.state.matrix;    
+    snake.pop(0)
+    let newMouth
+
+    if (direction === 'Right') {
+      newMouth = [mouth[0], mouth[1] + 1]
+    }
+    if (direction === 'Left') {          
+      newMouth = [mouth[0], mouth[1] - 1]          
+    }   
+    if (direction === 'Up') {          
+      newMouth = [mouth[0] - 1, mouth[1]]          
+    }  
+    if (direction === 'Down') {          
+      newMouth = [mouth[0] + 1, mouth[1]]
+    }
+    console.log('newMouth', newMouth);
+    snake.unshift(newMouth)
+    matrix = this.setSnakeOnMatrix(this.getClearMatrix([20,20]), snake)
+    this.setState({
+      matrix: matrix,
+      snake: snake
+    })
   }
 
   render() {
