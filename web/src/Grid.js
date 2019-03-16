@@ -10,7 +10,6 @@ class Grid extends Component {
       snake: [ [10, 10] ],
       snakeSpeed: 300,
       foodPos: [],
-      mouthPos: [10, 10],
       snakeLength: 1,
       direction: null,
       matrix: []
@@ -34,8 +33,6 @@ class Grid extends Component {
         let newDirection
 
         let direction = this.state.direction;
-
-        console.log(this.state.direction);  
                 
         if (event.key.split('Arrow')[1] === 'Right' && direction !== 'Left') {
           newDirection = event.key.split('Arrow')[1]          
@@ -51,9 +48,7 @@ class Grid extends Component {
 
         this.setState({
           direction: newDirection
-        })
-
-        // this.moveSnake(newDirection)         
+        })     
       }
   }
 
@@ -124,12 +119,14 @@ class Grid extends Component {
 
     nextMouth = this.adjustForOutOfBounds(nextMouth, this.state.gridSize)
 
-    debugger;
-
     if (this.getCellId(nextMouth) === this.getCellId(foodPos)) {
       // Update mouth of snake to nextMouth and Reset Food
       snake.unshift(nextMouth)      
       foodPos = this.generateRandomFoodPos(gridSize)      
+    } else if (snake.map(seg => this.getCellId(seg)).includes(this.getCellId(nextMouth))) {
+      snake = [[10, 10]];
+      foodPos = this.generateRandomFoodPos(gridSize);
+      direction = null;
     } else {
       // Otherwise just remove tail and add it to nextMouth
       // to simulate movement of the snake.
@@ -141,7 +138,8 @@ class Grid extends Component {
     this.setState({
       matrix,
       snake,
-      foodPos
+      foodPos,
+      direction
     })
   }
 
