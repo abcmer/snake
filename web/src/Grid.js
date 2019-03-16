@@ -7,12 +7,12 @@ class Grid extends Component {
     super(props);
     this.state = {
       gridSize: [20, 20],
-      snake: [ [10, 10] ],
       snakeSpeed: 300,
+      snake: [ [10, 10] ],      
       foodPos: [],
-      snakeLength: 1,
       direction: null,
-      matrix: []
+      matrix: [],
+      points: 0
     };
     this.handleKeyDown = this.handleKeyDown.bind(this)
   }
@@ -96,7 +96,7 @@ class Grid extends Component {
   }
 
   moveSnake(direction) {    
-    let { snake, matrix, foodPos, gridSize } = this.state;    
+    let { snake, matrix, foodPos, gridSize, points } = this.state;    
     const mouthPos = snake[0]    
     let nextMouth
 
@@ -120,13 +120,18 @@ class Grid extends Component {
     nextMouth = this.adjustForOutOfBounds(nextMouth, this.state.gridSize)
 
     if (this.getCellId(nextMouth) === this.getCellId(foodPos)) {
-      // Update mouth of snake to nextMouth and Reset Food
+      // Update mouth of snake to nextMouth
+      // Reset Food
+      // Add 1 point
       snake.unshift(nextMouth)      
-      foodPos = this.generateRandomFoodPos(gridSize)      
+      foodPos = this.generateRandomFoodPos(gridSize)   
+      points += 1  
     } else if (snake.map(seg => this.getCellId(seg)).includes(this.getCellId(nextMouth))) {
+      // Reset the game back to default
       snake = [[10, 10]];
       foodPos = this.generateRandomFoodPos(gridSize);
       direction = null;
+      points = 0
     } else {
       // Otherwise just remove tail and add it to nextMouth
       // to simulate movement of the snake.
@@ -139,7 +144,8 @@ class Grid extends Component {
       matrix,
       snake,
       foodPos,
-      direction
+      direction,
+      points
     })
   }
 
@@ -207,9 +213,13 @@ class Grid extends Component {
     }
     
     return (
-      <div className="grid-container" style={gridContainerStyle} onKeyDown={this.handleKeyDown} >
-        {getGridItems(this.state.matrix)}
+      <div className="game">
+        <div className="grid-container" style={gridContainerStyle} onKeyDown={this.handleKeyDown} >
+          {getGridItems(this.state.matrix)}
+        </div>
+        <h1>Points: {this.state.points}</h1>
       </div>
+      
     );
   }
 }
