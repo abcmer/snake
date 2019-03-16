@@ -20,6 +20,11 @@ class Grid extends Component {
   componentDidMount() {
     document.addEventListener('keydown', this.handleKeyDown)
     this.initializeMatrix(this.state.gridSize, this.state.snake)
+    this.interval = setInterval(() => this.moveSnake(this.state.direction), 300);
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.interval);
   }
     
   handleKeyDown = (event) => {
@@ -47,7 +52,7 @@ class Grid extends Component {
           direction: newDirection
         })
 
-        this.moveSnake(newDirection)         
+        // this.moveSnake(newDirection)         
       }
   }
 
@@ -98,6 +103,10 @@ class Grid extends Component {
     let { snake, matrix, foodPos, gridSize } = this.state;    
     const mouthPos = snake[0]    
     let nextMouth
+
+    if (!direction) {
+      return null
+    }
 
     if (direction === 'Right') {
       nextMouth = [mouthPos[0], mouthPos[1] + 1]
