@@ -166,11 +166,18 @@ class Grid extends Component {
   }
 
   setRandomFoodOnMatrix(matrix) {
+    // Random food location is generated. If that location is blank set the food.
+    // But if that location is taken by the snake, then recursively run 
+    // this function again.
     const foodPos = this.generateRandomFoodPos([matrix.length, matrix[0].length])
-    this.setState({
-      foodPos: foodPos
-    })
-    matrix[foodPos[0]][foodPos[1]] = 2   
+    if (matrix[foodPos[0]][foodPos[1]] === 0) {
+      matrix[foodPos[0]][foodPos[1]] = 2 // 2 = food
+      this.setState({
+        foodPos: foodPos
+      })
+    } else {
+      matrix = this.setRandomFoodOnMatrix(matrix)
+    }      
     return matrix
   }  
 
