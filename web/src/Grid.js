@@ -7,8 +7,8 @@ class Grid extends Component {
     super(props);
     this.state = {
       gridSize: [20, 20],
-      snake: [ [10, 10], [10, 9]],
-      foodCoords: [],
+      snake: [ [10, 10] ],
+      foodPos: [],
       mouthPos: [10, 10],
       snakeLength: 1,
       direction: null,
@@ -79,13 +79,13 @@ class Grid extends Component {
     return matrix
   }
   
-  reInitializeMatrix(matrix, snake, foodCoords) {
+  reInitializeMatrix(matrix, snake, foodPos) {
     snake.forEach(seg => {
       matrix = this.setCell(matrix,seg,1)
     })
 
     // Set food
-    matrix = this.setFoodCoordsOnMatrix(matrix, foodCoords)
+    matrix = this.setfoodPosOnMatrix(matrix, foodPos)
     return matrix
   }
     
@@ -94,40 +94,49 @@ class Grid extends Component {
     return matrix
   }
 
-  growSnake() {
-    debugger;
-  }
-
   moveSnake(direction) {    
-    let snake = this.state.snake;
-    const mouthPos = snake[0]
-
-    let matrix = this.state.matrix;    
-    snake.pop(0)
-    let newMouth
+    let { snake, matrix, foodPos, gridSize } = this.state;    
+    const mouthPos = snake[0]    
+    let nextMouth
 
     if (direction === 'Right') {
-      newMouth = [mouthPos[0], mouthPos[1] + 1]
+      nextMouth = [mouthPos[0], mouthPos[1] + 1]
     }
     if (direction === 'Left') {          
-      newMouth = [mouthPos[0], mouthPos[1] - 1]          
+      nextMouth = [mouthPos[0], mouthPos[1] - 1]          
     }   
     if (direction === 'Up') {          
-      newMouth = [mouthPos[0] - 1, mouthPos[1]]          
+      nextMouth = [mouthPos[0] - 1, mouthPos[1]]          
     }  
     if (direction === 'Down') {          
-      newMouth = [mouthPos[0] + 1, mouthPos[1]]
+      nextMouth = [mouthPos[0] + 1, mouthPos[1]]
     }
-    
-    newMouth = this.adjustForOutOfBounds(newMouth, this.state.gridSize)
 
-    console.log('newMouth', newMouth);
-    snake.unshift(newMouth)
-    matrix = this.reInitializeMatrix(this.getClearMatrix(this.state.gridSize), snake, this.state.foodCoords)
+    nextMouth = this.adjustForOutOfBounds(nextMouth, this.state.gridSize)
+
+    debugger;
+
+    if (this.getCellId(nextMouth) === this.getCellId(foodPos)) {
+      // Update mouth of snake to nextMouth and Reset Food
+      snake.unshift(nextMouth)      
+      foodPos = this.generateRandomFoodPos(gridSize)      
+    } else {
+      // Otherwise just remove tail and add it to nextMouth
+      // to simulate movement of the snake.
+      snake.pop(0)
+      snake.unshift(nextMouth)
+      
+    }        
+    matrix = this.reInitializeMatrix(this.getClearMatrix(gridSize), snake, foodPos)
     this.setState({
-      matrix: matrix,
-      snake: snake
+      matrix,
+      snake,
+      foodPos
     })
+  }
+
+  getCellId(coords) {
+    return coords[0].toString() + coords[1].toString()
   }
 
   adjustForOutOfBounds(mouthPos, gridSize) {
@@ -149,17 +158,21 @@ class Grid extends Component {
   }
 
   setRandomFoodOnMatrix(matrix) {
-    const foodCoords = [Math.floor(Math.random() * 20), Math.floor(Math.random() * 20)]
+    const foodPos = this.generateRandomFoodPos([matrix.length, matrix[0].length])
     this.setState({
-      foodCoords: foodCoords
+      foodPos: foodPos
     })
-    matrix[foodCoords[0]][foodCoords[1]] = 2   
+    matrix[foodPos[0]][foodPos[1]] = 2   
     return matrix
   }  
 
-  setFoodCoordsOnMatrix(matrix, foodCoords) {
-    matrix[foodCoords[0]][foodCoords[1]] = 2   
+  setfoodPosOnMatrix(matrix, foodPos) {
+    matrix[foodPos[0]][foodPos[1]] = 2   
     return matrix
+  }
+
+  generateRandomFoodPos(gridSize) {
+    return [Math.floor(Math.random() * gridSize[0]), Math.floor(Math.random() * gridSize[1])]
   }
 
   render() {
