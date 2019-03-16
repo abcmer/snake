@@ -8,7 +8,7 @@ class Grid extends Component {
     super(props);
     this.state = {
       gridSize: [15,15],
-      snakeSpeed: 300,
+      snakeSpeed: 200,
       snake: [ [10, 10] ],      
       foodPos: [],
       direction: null,
@@ -30,7 +30,6 @@ class Grid extends Component {
     
   handleKeyDown = (event) => {
       if (event.key.startsWith('Arrow')) {
-        let matrix = this.state.matrix;
         let newDirection
 
         let direction = this.state.direction;
@@ -208,7 +207,7 @@ class Grid extends Component {
     const getGridItems = (matrix) => {
       return matrix.map((row, rIndex) => {
         return row.map((cellValue, cIndex) => {
-          return <Cell row={rIndex} col={cIndex} cellValue={cellValue} />
+          return <Cell id={`${rIndex}${cIndex}`} row={rIndex} col={cIndex} cellValue={cellValue} />
         })
       })
     }
