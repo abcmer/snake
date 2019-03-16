@@ -8,6 +8,7 @@ class Grid extends Component {
     this.state = {
       gridSize: [20, 20],
       snake: [ [10, 10] ],
+      snakeSpeed: 300,
       foodPos: [],
       mouthPos: [10, 10],
       snakeLength: 1,
@@ -20,7 +21,7 @@ class Grid extends Component {
   componentDidMount() {
     document.addEventListener('keydown', this.handleKeyDown)
     this.initializeMatrix(this.state.gridSize, this.state.snake)
-    this.interval = setInterval(() => this.moveSnake(this.state.direction), 300);
+    this.interval = setInterval(() => this.moveSnake(this.state.direction), this.state.snakeSpeed);
   }
 
   componentWillUnmount() {
