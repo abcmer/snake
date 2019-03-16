@@ -1,12 +1,13 @@
 import React, { Component } from 'react';
 import Cell from './Cell'
 import './App.css';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 class Grid extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      gridSize: [20, 20],
+      gridSize: [15,15],
       snakeSpeed: 300,
       snake: [ [10, 10] ],      
       foodPos: [],
@@ -198,7 +199,7 @@ class Grid extends Component {
 
   render() {
 
-    const dimensions = [20, 20]
+    const dimensions = [15,15]
 
     const gridContainerStyle = {
       gridTemplateColumns: '40px '.repeat(dimensions[0])
@@ -213,11 +214,26 @@ class Grid extends Component {
     }
     
     return (
-      <div className="game">
-        <div className="grid-container" style={gridContainerStyle} onKeyDown={this.handleKeyDown} >
-          {getGridItems(this.state.matrix)}
-        </div>
-        <h1>Points: {this.state.points}</h1>
+      <div className="container">
+        <div className="row">
+          <div className="col-2">
+          </div>
+          <div className="col-8">
+            <div className="grid-container" style={gridContainerStyle} onKeyDown={this.handleKeyDown} >
+              {getGridItems(this.state.matrix)}
+            </div>
+          </div>
+          <div className="col-2">
+          </div>
+        </div>  
+        <div className="row">
+          <div className="col-4"/>
+          <div className="col-3">
+            <h1>Points: {this.state.points}</h1>
+          </div>
+          <div className="col-5"/>   
+        </div>     
+        
       </div>
       
     );

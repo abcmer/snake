@@ -34,12 +34,11 @@
 
 .grid-container {
   display: grid;
-  background-color: #2196F3;
   padding: 10px;
 }
 .grid-item {
   background-color: rgba(255, 255, 255, 0.8);
-  border: 1px solid rgba(0, 0, 0, 0.8);
+  border: .025rem solid #7D13FF;
   padding: 20px;
   font-size: 30px;
   text-align: center;

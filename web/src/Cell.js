@@ -11,11 +11,11 @@ class Cell extends Component {
   render() {
     const cellStyle = () => {
       if (this.props.cellValue === 1) {
-        return {backgroundColor: 'green'}
+        return {backgroundColor: '#78BD1F'} // snake green
       } else if (this.props.cellValue === 2) {
-        return {backgroundColor: 'yellow'}
+        return {backgroundColor: 'red'} //
       } else if (this.props.cellValue === 0) {
-        return {backgroundColor: '#2196F3'}
+        return {backgroundColor: '#0A233F'} //background navy blue
       }
     }
 
