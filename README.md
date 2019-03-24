@@ -10,8 +10,7 @@ These instructions will get you a copy of the game up and running on your local 
 
 What things you need to install the software and how to install them
 
-[NodeJS](https://nodejs.org/en/)
-[Yarn](https://yarnpkg.com/en/)
+- [Docker CE](https://docs.docker.com/install/)
 
 ### Installing
 
@@ -21,21 +20,15 @@ Clone this project
 git clone https://github.com/abcmer/snake.git
 ```
 
-Change into project web directory
+Build the dev Docker image from the project root
 
 ```
-cd snake/web
+docker build web -f web/Dockerfile.dev -t snake:dev
 ```
 
-Install node dependencies
-
+Run dev Docker container
 ```
-yarn install
-```
-
-Start dev server
-```
-yarn start
+docker run -d -p 3000:3000 snake:dev
 ```
 Go to http://localhost:3000 to play the game!
 
