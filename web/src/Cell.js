@@ -13,7 +13,7 @@ class Cell extends Component {
       if (this.props.cellValue === 1) {
         return {backgroundColor: '#78BD1F'} // snake green
       } else if (this.props.cellValue === 2) {
-        return {backgroundColor: 'red'} //
+        return {backgroundColor: 'yellow'} //
       } else if (this.props.cellValue === 0) {
         return {backgroundColor: '#0A233F'} //background navy blue
       }
