@@ -1,3 +1,5 @@
+[![Netlify Status](https://api.netlify.com/api/v1/badges/f0d7b50c-455d-499a-82f8-2fa9b6c2e67b/deploy-status)](https://app.netlify.com/sites/elegant-clarke-893052/deploys)
+
 # snake
 
 Simple clone of the game snake. Control the snake with arrow keys to eat the food. Try not to eat yourself.
