@@ -203,6 +203,10 @@ class Grid extends Component {
     const gridContainerStyle = {
       gridTemplateColumns: '40px '.repeat(dimensions[0])
     }
+
+    const containerStyle = {
+      height: window.innerHeight
+    }
     
     const getGridItems = (matrix) => {
       return matrix.map((row, rIndex) => {
@@ -211,9 +215,11 @@ class Grid extends Component {
         })
       })
     }
+
+
     
     return (
-      <div className="container">
+      <div className="container" style={containerStyle}>
         <div className="row">
           <div className="col-2">
           </div>

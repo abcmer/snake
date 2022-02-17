@@ -1,6 +1,10 @@
+body {
+  background-color: black;
+}
 .App {
   text-align: center;
   background-color: black;
+  /* height: 2000px;  */
 }
 
 .App-logo {
@@ -32,10 +36,13 @@
     transform: rotate(360deg);
   }
 }
-
+/* .container {
+  height: 1000px;   
+} */
 .grid-container {
   display: grid;
   padding: 10px;
+  height: 100%;
 }
 .grid-item {
   background-color: rgba(255, 255, 255, 0.8);
