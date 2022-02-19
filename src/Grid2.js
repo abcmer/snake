@@ -31,6 +31,7 @@ const Grid = (props) => {
 
   const initializeMatrix = (gridSize, snake) => {
     console.log('gridSize', gridSize)
+    console.log('snake', snake)
     let matrix = Array(gridSize[0]).fill().map((_,r) => {
       return Array(gridSize[1]).fill().map((_,c) => {
           return 0 // 0 = background

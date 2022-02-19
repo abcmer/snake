@@ -36,9 +36,8 @@ body {
   /* height: 100%; */
 }
 .grid-item {
-  background-color: #0B233F;
-  border: 0.025rem solid #7d13ff;
-  padding: 20px;
+  /* border: 0.025rem solid #7d13ff;
+  padding: 20px; */
   /* font-size: 30px; */
   text-align: center;
 }

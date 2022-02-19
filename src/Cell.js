@@ -21,6 +21,7 @@ const Cell = (props) => {
     } else if (cellValue === 0) {
       style.backgroundColor = '#0A233F' //background navy blue
     }
+    return style
   }
 
   return (
