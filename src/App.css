@@ -27,21 +27,12 @@ body {
 .App-link {
   color: #61dafb;
 }
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
 /* .container {
   height: 1000px;   
 } */
 .grid-container {
   display: grid;
-  padding: 10px;
+  /* padding: 10px; */
   height: 100%;
 }
 .grid-item {
@@ -50,7 +41,7 @@ body {
   padding: 20px;
   font-size: 30px;
   text-align: center;
-  height: 5%;
+  height: 80px;
 }
 
 h1 {

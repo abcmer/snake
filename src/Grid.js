@@ -4,10 +4,11 @@ import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 class Grid extends Component {
+
   constructor(props) {
     super(props);
     this.state = {
-      gridSize: [15,15],
+      gridSize: [20,10],
       snakeSpeed: 200,
       snake: [ [10, 10] ],      
       foodPos: [],
@@ -197,15 +198,15 @@ class Grid extends Component {
   }
 
   render() {
-
-    const dimensions = [15,15]
-
+    const cellWidth = parseInt((window.innerWidth / 20))
     const gridContainerStyle = {
-      gridTemplateColumns: '40px '.repeat(dimensions[0])
+      gridTemplateColumns: `${cellWidth}px `.repeat(this.state.gridSize[0])
     }
 
     const containerStyle = {
-      height: window.innerHeight
+      height: window.innerHeight,
+      padding: '0px',
+      margin: '0px'
     }
     
     const getGridItems = (matrix) => {
@@ -221,14 +222,10 @@ class Grid extends Component {
     return (
       <div className="container" style={containerStyle}>
         <div className="row">
-          <div className="col-2">
-          </div>
-          <div className="col-8">
+          <div className="col-12">
             <div className="grid-container" style={gridContainerStyle} onKeyDown={this.handleKeyDown} >
               {getGridItems(this.state.matrix)}
             </div>
-          </div>
-          <div className="col-2">
           </div>
         </div>  
         <div className="row">
@@ -237,10 +234,8 @@ class Grid extends Component {
             <h1>Points: {this.state.points}</h1>
           </div>
           <div className="col-5"/>   
-        </div>     
-        
-      </div>
-      
+        </div>             
+      </div>      
     );
   }
 }
