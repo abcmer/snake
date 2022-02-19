@@ -3,9 +3,6 @@ import './App.css';
 
 const Cell = (props) => {
   const {id, sideLength, cellValue} = props
-  console.log('id', id)
-  console.log('sideLength', sideLength)
-  console.log('cellValue', cellValue)
   const cellStyle = () => {
     let style = {
       backgroundColor: 'rgba(255, 255, 255, 0.8)',
@@ -13,7 +10,8 @@ const Cell = (props) => {
       padding: '20px',
       fontSize: '30px',
       textAlign: 'center',
-      height: `${sideLength}px`
+      height: `${sideLength}px`,
+      width: `${sideLength}px`
     }
     
     if (cellValue === 1) {

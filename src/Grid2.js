@@ -4,34 +4,33 @@ import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 const Grid = (props) => {
-  // super(props);
-  // this.state = {
-  //   gridSize: [20,10],
-  //   snakeSpeed: 200,
-  //   snake: [ [10, 10] ],      
-  //   foodPos: [],
-  //   direction: null,
-  //   matrix: [],
-  //   points: 0
-  const [cellSideLength, setCellSideLenth] = useState(parseInt((window.innerWidth / 20)))
-  const [gridSize, setGridSize] = useState([20, parseInt(window.innerHeight / cellSideLength)])
+  const [cellSideLength, setCellSideLenth] = useState(Math.floor((window.innerWidth / 20)))
+  const [gridSize, setGridSize] = useState([20, Math.floor(window.innerHeight / cellSideLength)])
   const [snakeSpeed, setSnakeSpeed] = useState(200)
   const [snake, setSnake] = useState([ [10, 10] ])
   const [foodPos, setFoodPos] = useState([])
   const [direction, setDirection] = useState(null)
   const [matrix, setMatrix] = useState([])
   const [points, setPoints] = useState(0)
-  
 
   useEffect(() => {
-    // Update the document title using the browser API
-    // setGridSize()
-    console.log('gridSize', gridSize)
-    initializeMatrix(gridSize, snake)
+    // // console.log('gridSize', gridSize)
+    // if (window.innerWidth > window.innerHeight) {
+    //   console.log('laptop')
+    //   setCellSideLenth(Math.floor((window.innerWidth / 20)))
+    //   setGridSize([20, Math.floor(window.innerHeight / cellSideLength)])
+    // } else {
+    //   console.log('mobile')
+    //   setCellSideLenth(Math.floor((window.innerHeight / 20)))
+    //   setGridSize([Math.floor(window.innerWidth / cellSideLength), 20])
+    // }    
+
+  initializeMatrix(gridSize, snake)
   }, []);
 
 
   const initializeMatrix = (gridSize, snake) => {
+    console.log('gridSize', gridSize)
     let matrix = Array(gridSize[0]).fill().map((_,r) => {
       return Array(gridSize[1]).fill().map((_,c) => {
           return 0 // 0 = background
@@ -87,7 +86,10 @@ const Grid = (props) => {
 
   const gridContainerStyle = () => {
     console.log('gridSize', gridSize)
-    return ({gridTemplateColumns: `${cellSideLength}px `.repeat(gridSize[0])})
+    return ({
+      gridTemplateColumns: `${cellSideLength}px `.repeat(gridSize[0]),
+      height: window.innerHeight
+    })
     
   }
 
@@ -114,30 +116,17 @@ const Grid = (props) => {
       } else {
         newDirection = direction
       }
-
       setDirection(newDirection)  
     }
 }
-
-  
   return (
     <div className="container" style={containerStyle}>
-      <div className="row">
         <div className="col-12">
           <div className="grid-container" style={gridContainerStyle()} onKeyDown={handleKeyDown} >
             {getGridItems(matrix)}
           </div>
-        </div>
-      </div>  
-      <div className="row">
-        <div className="col-4"/>
-        <div className="col-3">
-          <h1>Points: {points}</h1>
-        </div>
-        <div className="col-5"/>   
-      </div>             
+        </div>          
     </div>      
   );
 }
-
 export default Grid
