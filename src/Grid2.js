@@ -9,7 +9,7 @@ const Grid = (props) => {
   const [snakeSpeed, setSnakeSpeed] = useState(200)
   const [snake, setSnake] = useState([ [10, 10] ])
   const [foodPos, setFoodPos] = useState([])
-  const [direction, setDirection] = useState(null)
+  const [direction, setDirection] = useState("")
   const [matrix, setMatrix] = useState([])
   const [points, setPoints] = useState(0)
 
@@ -26,7 +26,15 @@ const Grid = (props) => {
     // }    
 
   initializeMatrix(gridSize, snake)
+  document.addEventListener('keydown', handleKeyDown)
   }, []);
+
+  useEffect(() => {
+    setInterval(() => {
+      console.log('direction', direction)
+      moveSnake(direction)
+      }, snakeSpeed)
+  }, [direction])
 
 
   const initializeMatrix = (gridSize, snake) => {
@@ -50,6 +58,99 @@ const Grid = (props) => {
   const setCell = (matrix, coordinates, value) => {
     matrix[coordinates[0]][coordinates[1]] = value
     return matrix
+  }
+
+  const getCellId = (coords) => {
+    return coords[0].toString() + coords[1].toString()
+  }
+
+  const reInitializeMatrix = (matrix, snake, foodPos) => {
+    snake.forEach(seg => {
+      matrix = setCell(matrix,seg,1)
+    })
+
+    // Set food
+    matrix = setfoodPosOnMatrix(matrix, foodPos)
+    return matrix
+  }
+
+  const getClearMatrix = (gridSize) => {
+    let matrix = Array(gridSize[0]).fill().map((_,r) => {
+      return Array(gridSize[1]).fill().map((_,c) => {
+          return 0
+        })
+      }
+    )
+    return matrix
+  }  
+
+  const adjustForOutOfBounds = (mouthPos, gridSize) => {
+    // TODO dynamically use state.gridSize
+    
+    if (mouthPos[0] === -1) {
+      // Adjust for out of bounds Up
+      mouthPos[0] = gridSize[0] -1
+    } else if (mouthPos[0] === gridSize[0]) {
+      // Adjust for out of bounds Down
+      mouthPos[0] = 0
+    } else if (mouthPos[1] === -1) {
+      // Adjust for out of bounds Left
+      mouthPos[1] = gridSize[1] -1
+    } else if (mouthPos[1] === gridSize[1]) {
+      mouthPos[1] = 0
+    }
+    return mouthPos
+  }  
+
+  const moveSnake = (direction) => {  
+    const mouthPos = snake[0]    
+    let nextMouth
+
+    if (!direction) {
+      return null
+    }
+
+    if (direction === 'Right') {
+      nextMouth = [mouthPos[0], mouthPos[1] + 1]
+    }
+    if (direction === 'Left') {          
+      nextMouth = [mouthPos[0], mouthPos[1] - 1]          
+    }   
+    if (direction === 'Up') {          
+      nextMouth = [mouthPos[0] - 1, mouthPos[1]]          
+    }  
+    if (direction === 'Down') {          
+      nextMouth = [mouthPos[0] + 1, mouthPos[1]]
+    }
+
+    nextMouth = adjustForOutOfBounds(nextMouth, gridSize)
+
+    if (getCellId(nextMouth) === getCellId(foodPos)) {
+      // Update mouth of snake to nextMouth
+      // Reset Food
+      // Add 1 point
+      snake.unshift(nextMouth)      
+      foodPos = generateRandomFoodPos(gridSize)   
+      points += 1  
+    } else if (snake.map(seg => getCellId(seg)).includes(getCellId(nextMouth))) {
+      // Reset the game back to default
+      snake = [[10, 10]];
+      foodPos = generateRandomFoodPos(gridSize);
+      direction = null;
+      points = 0
+    } else {
+      // Otherwise just remove tail and add it to nextMouth
+      // to simulate movement of the snake.
+      snake.pop(0)
+      snake.unshift(nextMouth)
+      
+    }        
+    let matrix = reInitializeMatrix(getClearMatrix(gridSize), snake, foodPos)
+    setMatrix(matrix)
+    setSnake(snake)
+    setFoodPos(foodPos)
+    setDirection(direction)
+    setPoints(points)
   }
 
   const setRandomFoodOnMatrix = (matrix) => {
@@ -101,22 +202,24 @@ const Grid = (props) => {
   }
 
   const handleKeyDown = (event) => {
+    console.log('event', event)
     if (event.key.startsWith('Arrow')) {
       let newDirection
 
       let direction = direction;
               
-      if (event.key.split('Arrow')[1] === 'Right' && direction !== 'Left') {
-        newDirection = event.key.split('Arrow')[1]          
-      } else if (event.key.split('Arrow')[1] === 'Left' && direction !== 'Right') {          
-        newDirection = event.key.split('Arrow')[1]          
-      } else if (event.key.split('Arrow')[1] === 'Up' && direction !== 'Down') { 
-        newDirection = event.key.split('Arrow')[1]          
-      } else if (event.key.split('Arrow')[1] === 'Down' && direction !== 'Up') {          
-        newDirection = event.key.split('Arrow')[1]          
+      if (event.key  == 'ArrowRight' && direction !== 'Left') {
+        newDirection = 'Right'          
+      } else if (event.key == 'ArrowLeft' && direction !== 'Right') {          
+        newDirection = 'Left'        
+      } else if (event.key == 'ArrowUp' && direction !== 'Down') { 
+        newDirection = 'Up'         
+      } else if (event.key == 'ArrowDown' && direction !== 'Up') {          
+        newDirection = 'Down'        
       } else {
         newDirection = direction
       }
+      console.log('newDirection', newDirection)
       setDirection(newDirection)  
     }
 }
