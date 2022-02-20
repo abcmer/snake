@@ -29,19 +29,24 @@ const Grid = (props) => {
   document.addEventListener('keydown', handleKeyDown)
   }, []);
 
+  // useEffect(() => {
+  //   setInterval(() => {
+  //     console.log('direction', direction)
+  //     moveSnake(direction)
+  //     }, snakeSpeed)
+  // }, [direction])
+
   useEffect(() => {
-    setInterval(() => {
       console.log('direction', direction)
       moveSnake(direction)
-      }, snakeSpeed)
   }, [direction])
 
 
   const initializeMatrix = (gridSize, snake) => {
     console.log('gridSize', gridSize)
     console.log('snake', snake)
-    let matrix = Array(gridSize[0]).fill().map((_,r) => {
-      return Array(gridSize[1]).fill().map((_,c) => {
+    let matrix = Array(gridSize[1]).fill().map((_,r) => {
+      return Array(gridSize[0]).fill().map((_,c) => {
           return 0 // 0 = background
         })
       }
@@ -75,8 +80,8 @@ const Grid = (props) => {
   }
 
   const getClearMatrix = (gridSize) => {
-    let matrix = Array(gridSize[0]).fill().map((_,r) => {
-      return Array(gridSize[1]).fill().map((_,c) => {
+    let matrix = Array(gridSize[1]).fill().map((_,r) => {
+      return Array(gridSize[0]).fill().map((_,c) => {
           return 0
         })
       }
@@ -84,19 +89,17 @@ const Grid = (props) => {
     return matrix
   }  
 
-  const adjustForOutOfBounds = (mouthPos, gridSize) => {
-    // TODO dynamically use state.gridSize
-    
+  const adjustForOutOfBounds = (mouthPos, gridSize) => {    
     if (mouthPos[0] === -1) {
       // Adjust for out of bounds Up
-      mouthPos[0] = gridSize[0] -1
-    } else if (mouthPos[0] === gridSize[0]) {
+      mouthPos[0] = gridSize[1] -1
+    } else if (mouthPos[0] === gridSize[1]) {
       // Adjust for out of bounds Down
       mouthPos[0] = 0
     } else if (mouthPos[1] === -1) {
       // Adjust for out of bounds Left
-      mouthPos[1] = gridSize[1] -1
-    } else if (mouthPos[1] === gridSize[1]) {
+      mouthPos[1] = gridSize[0] -1
+    } else if (mouthPos[1] === gridSize[0]) {
       mouthPos[1] = 0
     }
     return mouthPos
@@ -130,14 +133,14 @@ const Grid = (props) => {
       // Reset Food
       // Add 1 point
       snake.unshift(nextMouth)      
-      foodPos = generateRandomFoodPos(gridSize)   
-      points += 1  
+      setFoodPos(generateRandomFoodPos(gridSize))
+      setPoints(points+1)
     } else if (snake.map(seg => getCellId(seg)).includes(getCellId(nextMouth))) {
       // Reset the game back to default
-      snake = [[10, 10]];
-      foodPos = generateRandomFoodPos(gridSize);
-      direction = null;
-      points = 0
+      setSnake([[10, 10]])
+      setFoodPos(generateRandomFoodPos(gridSize));
+      setDirection(null)
+      setPoints(0)
     } else {
       // Otherwise just remove tail and add it to nextMouth
       // to simulate movement of the snake.
@@ -146,6 +149,7 @@ const Grid = (props) => {
       
     }        
     let matrix = reInitializeMatrix(getClearMatrix(gridSize), snake, foodPos)
+    console.log('matrix', matrix)
     setMatrix(matrix)
     setSnake(snake)
     setFoodPos(foodPos)
@@ -208,13 +212,13 @@ const Grid = (props) => {
 
       let direction = direction;
               
-      if (event.key  == 'ArrowRight' && direction !== 'Left') {
+      if (event.key  === 'ArrowRight' && direction !== 'Left') {
         newDirection = 'Right'          
-      } else if (event.key == 'ArrowLeft' && direction !== 'Right') {          
+      } else if (event.key === 'ArrowLeft' && direction !== 'Right') {          
         newDirection = 'Left'        
-      } else if (event.key == 'ArrowUp' && direction !== 'Down') { 
+      } else if (event.key === 'ArrowUp' && direction !== 'Down') { 
         newDirection = 'Up'         
-      } else if (event.key == 'ArrowDown' && direction !== 'Up') {          
+      } else if (event.key === 'ArrowDown' && direction !== 'Up') {          
         newDirection = 'Down'        
       } else {
         newDirection = direction

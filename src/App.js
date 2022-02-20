@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
-import Grid from './Grid';
+// import Grid from './Grid';
 import Grid2 from './Grid2';
 import './App.css';
 const height = window.innerHeight;

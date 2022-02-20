@@ -125,14 +125,14 @@ class Grid extends Component {
       // Reset Food
       // Add 1 point
       snake.unshift(nextMouth)      
-      foodPos = this.generateRandomFoodPos(gridSize)   
-      points += 1  
+      let foodPos = this.generateRandomFoodPos(gridSize)   
+      setPoints(points + 1)
     } else if (snake.map(seg => this.getCellId(seg)).includes(this.getCellId(nextMouth))) {
       // Reset the game back to default
       snake = [[10, 10]];
       foodPos = this.generateRandomFoodPos(gridSize);
       direction = null;
-      points = 0
+      setPoints(0)
     } else {
       // Otherwise just remove tail and add it to nextMouth
       // to simulate movement of the snake.
