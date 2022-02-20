@@ -14,17 +14,6 @@ const Grid = (props) => {
   const [points, setPoints] = useState(0)
 
   useEffect(() => {
-    // // console.log('gridSize', gridSize)
-    // if (window.innerWidth > window.innerHeight) {
-    //   console.log('laptop')
-    //   setCellSideLenth(Math.floor((window.innerWidth / 20)))
-    //   setGridSize([20, Math.floor(window.innerHeight / cellSideLength)])
-    // } else {
-    //   console.log('mobile')
-    //   setCellSideLenth(Math.floor((window.innerHeight / 20)))
-    //   setGridSize([Math.floor(window.innerWidth / cellSideLength), 20])
-    // }    
-
   initializeMatrix(gridSize, snake)
   document.addEventListener('keydown', handleKeyDown)
   }, []);
@@ -37,7 +26,6 @@ const Grid = (props) => {
   // }, [direction])
 
   useEffect(() => {
-      console.log('direction', direction)
       moveSnake(direction)
   }, [direction])
 
@@ -129,32 +117,37 @@ const Grid = (props) => {
     nextMouth = adjustForOutOfBounds(nextMouth, gridSize)
 
     if (getCellId(nextMouth) === getCellId(foodPos)) {
+      console.log('yummmmm')
       // Update mouth of snake to nextMouth
       // Reset Food
       // Add 1 point
-      snake.unshift(nextMouth)      
-      setFoodPos(generateRandomFoodPos(gridSize))
+      snake.unshift(nextMouth)   
+      setFoodPos(generateRandomFoodPos(gridSize));
       setPoints(points+1)
+      setSnake(snake)
+      setFoodPos(foodPos)
+      setDirection(direction)
+      let matrix = reInitializeMatrix(getClearMatrix(gridSize), snake, foodPos)
+      setMatrix(matrix)      
     } else if (snake.map(seg => getCellId(seg)).includes(getCellId(nextMouth))) {
       // Reset the game back to default
       setSnake([[10, 10]])
       setFoodPos(generateRandomFoodPos(gridSize));
       setDirection(null)
       setPoints(0)
+      setSnake(snake)
+      setFoodPos(foodPos)
+      setDirection(direction)
+      let matrix = reInitializeMatrix(getClearMatrix(gridSize), snake, foodPos)
+      setMatrix(matrix)        
     } else {
       // Otherwise just remove tail and add it to nextMouth
       // to simulate movement of the snake.
       snake.pop(0)
-      snake.unshift(nextMouth)
-      
+      snake.unshift(nextMouth) 
+      let matrix = reInitializeMatrix(getClearMatrix(gridSize), snake, foodPos)
+      setMatrix(matrix)             
     }        
-    let matrix = reInitializeMatrix(getClearMatrix(gridSize), snake, foodPos)
-    console.log('matrix', matrix)
-    setMatrix(matrix)
-    setSnake(snake)
-    setFoodPos(foodPos)
-    setDirection(direction)
-    setPoints(points)
   }
 
   const setRandomFoodOnMatrix = (matrix) => {
@@ -162,6 +155,7 @@ const Grid = (props) => {
     // But if that location is taken by the snake, then recursively run 
     // this function again.
     const foodPos = generateRandomFoodPos([matrix.length, matrix[0].length])
+    console.log('foodPos', foodPos)
     if (matrix[foodPos[0]][foodPos[1]] === 0) {
       matrix[foodPos[0]][foodPos[1]] = 2 // 2 = food
       setFoodPos(foodPos)
@@ -177,12 +171,12 @@ const Grid = (props) => {
   }
 
   const generateRandomFoodPos = (gridSize) => {
+    console.log([Math.floor(Math.random() * gridSize[0]), Math.floor(Math.random() * gridSize[1])])
     return [Math.floor(Math.random() * gridSize[0]), Math.floor(Math.random() * gridSize[1])]
   }
 
       
   const getGridItems = (matrix) => {
-    console.log('matrix', matrix)
     return matrix.map((row, rIndex) => {
       return row.map((cellValue, cIndex) => {
         return <Cell id={`${rIndex}${cIndex}`} sideLength={cellSideLength} row={rIndex} col={cIndex} cellValue={cellValue} />
@@ -191,7 +185,6 @@ const Grid = (props) => {
   }
 
   const gridContainerStyle = () => {
-    console.log('gridSize', gridSize)
     return ({
       gridTemplateColumns: `${cellSideLength}px `.repeat(gridSize[0]),
       height: window.innerHeight
@@ -206,7 +199,6 @@ const Grid = (props) => {
   }
 
   const handleKeyDown = (event) => {
-    console.log('event', event)
     if (event.key.startsWith('Arrow')) {
       let newDirection
 
@@ -223,7 +215,6 @@ const Grid = (props) => {
       } else {
         newDirection = direction
       }
-      console.log('newDirection', newDirection)
       setDirection(newDirection)  
     }
 }

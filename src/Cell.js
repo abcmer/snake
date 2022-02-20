@@ -3,7 +3,6 @@ import './App.css';
 
 const Cell = (props) => {
   const {id, sideLength, cellValue, row, col} = props
-  console.log(row,col)
   const cellStyle = () => {
     let style = {
       backgroundColor: 'rgba(255, 255, 255, 0.8)',
