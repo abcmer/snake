@@ -23,6 +23,7 @@ const Grid = (props) => {
   // matrix = setRandomFoodOnMatrix(matrix) 
   // // initialize Menu 
   // setMatrix(matrix)
+  handleResize()
   let matrix = new Matrix(gridSize[1], gridSize[0])
   // let matrix = new Matrix(gridSize[1], gridSize[0])
   matrix.setRandomFood()
@@ -41,8 +42,13 @@ const Grid = (props) => {
   }  
 
   const calculateAndSetGridSize = () => {
-    setCellSideLenth(Math.floor((window.innerWidth / 20)))
-    setGridSize([20, Math.floor(window.innerHeight / cellSideLength)])
+    if (window.innerWidth > window.innerHeight) {
+      setCellSideLenth(Math.floor((window.innerWidth / 20)))
+      setGridSize([20, Math.floor(window.innerHeight / cellSideLength)])
+    } else {
+      setCellSideLenth(Math.floor((window.innerWidth / 12)))
+      setGridSize([20, Math.floor(window.innerHeight / cellSideLength)])
+    }
   }
 
   // useEffect(() => {
