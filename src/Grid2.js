@@ -10,8 +10,8 @@ const Grid = (props) => {
   // const [snakeSpeed, setSnakeSpeed] = useState(200)
   // const [snake, setSnake] = useState([ [10, 10] ])
   // const [foodPos, setFoodPos] = useState([])
-  const [direction, setDirection] = useState("")
-  // const [matrix, setMatrix] = useState([])
+  const [direction, setDirection] = useState(null)
+  const [matrix, setMatrix] = useState(new Matrix())
   const [points, setPoints] = useState(0)
 
   useEffect(() => {
@@ -23,8 +23,27 @@ const Grid = (props) => {
   // matrix = setRandomFoodOnMatrix(matrix) 
   // // initialize Menu 
   // setMatrix(matrix)
+  let matrix = new Matrix(gridSize[1], gridSize[0])
+  // let matrix = new Matrix(gridSize[1], gridSize[0])
+  matrix.setRandomFood()
+  console.log('matrix', matrix.generateMatrix())  
   document.addEventListener('keydown', handleKeyDown)
+  window.addEventListener("resize", handleResize);
+  setMatrix(matrix)
   }, []);
+
+  const handleResize = () => {
+    calculateAndSetGridSize() 
+    let matrix = new Matrix(gridSize[1], gridSize[0])
+    // let matrix = new Matrix(gridSize[1], gridSize[0])
+    matrix.setRandomFood()
+    setMatrix(matrix)    
+  }  
+
+  const calculateAndSetGridSize = () => {
+    setCellSideLenth(Math.floor((window.innerWidth / 20)))
+    setGridSize([20, Math.floor(window.innerHeight / cellSideLength)])
+  }
 
   // useEffect(() => {
   //   setInterval(() => {
@@ -234,14 +253,11 @@ const Grid = (props) => {
     }
 }
 
-  let matrix2 = new Matrix(gridSize[1], gridSize[0])
-  matrix2.setRandomFood()
-  console.log('matrix2', matrix2.generateMatrix())
   return (
     <div className="container" style={containerStyle}>
         <div className="col-12">
           <div className="grid-container" style={gridContainerStyle()} onKeyDown={handleKeyDown} >
-            {getGridItems(matrix2.generateMatrix())}
+            {getGridItems(matrix.generateMatrix())}
           </div>
         </div>          
     </div>      
