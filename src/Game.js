@@ -34,7 +34,7 @@ class Game {
   }
 
   setInitialSnakePosititon() {
-    this.snake.push([Math.floor(this.rows / 2), Math.floor(this.cols / 2)])
+    this.snake = [[Math.floor(this.rows / 2), Math.floor(this.cols / 2)]]
   }
 
   getSnakeMouthPos() {

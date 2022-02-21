@@ -7,7 +7,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 const Grid = (props) => {
   const [cellSideLength, setCellSideLenth] = useState(Math.floor((window.innerWidth / 20)))
   const [gridSize, setGridSize] = useState([20, Math.floor(window.innerHeight / cellSideLength)])
-  const [snakeSpeed, setSnakeSpeed] = useState(200)
+  const [snakeSpeed, setSnakeSpeed] = useState(500)
   // const [snake, setSnake] = useState([ [10, 10] ])
   // const [foodPos, setFoodPos] = useState([])
   const [direction, setDirection] = useState(null)
@@ -29,7 +29,7 @@ const Grid = (props) => {
   // matrix.setRandomFood()
   // matrix.setInitialSnakePosititon()
     game.setRandomFood()
-    // game.setInitialSnakePosititon()
+    game.setInitialSnakePosititon()
     setGame(game)
     document.addEventListener('keydown', handleKeyDown)
     window.addEventListener("resize", handleResize);
@@ -269,7 +269,7 @@ const Grid = (props) => {
     }
 }
 
-game.setInitialSnakePosititon()
+// game.setInitialSnakePosititon()
 
 console.log('matrix', game.generateMatrix())
   return (
