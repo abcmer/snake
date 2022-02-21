@@ -27,6 +27,7 @@ const Grid = (props) => {
   let matrix = new Matrix(gridSize[1], gridSize[0])
   // let matrix = new Matrix(gridSize[1], gridSize[0])
   matrix.setRandomFood()
+  matrix.setInitialSnakePosititon()
   console.log('matrix', matrix.generateMatrix())  
   document.addEventListener('keydown', handleKeyDown)
   window.addEventListener("resize", handleResize);
@@ -38,6 +39,7 @@ const Grid = (props) => {
     let matrix = new Matrix(gridSize[1], gridSize[0])
     // let matrix = new Matrix(gridSize[1], gridSize[0])
     matrix.setRandomFood()
+    matrix.setInitialSnakePosititon()
     setMatrix(matrix)    
   }  
 

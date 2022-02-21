@@ -3,7 +3,7 @@ class Matrix {
     this.rows = rows;
     this.cols = cols
     this.foodPos = [0,0]
-    this.snake = [[rows / 2, cols / 2]]
+    this.snake = []
     this.snakeSquares = {}
   }
 
@@ -37,7 +37,7 @@ class Matrix {
   }
 
   setInitialSnakePosititon() {
-    this.snake.push([10,10])
+    this.snake.push([Math.floor(this.rows / 2), Math.floor(this.cols / 2)])
   }
 }
 
