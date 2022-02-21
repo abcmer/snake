@@ -45,30 +45,52 @@ class Game {
 
   }
 
-  moveSnakeLeftOneSquare() {    
-    let nextMouth = [this.getSnakeMouthPos()[0], this.getSnakeMouthPos()[1] - 1]
+  moveSnakeLeftOneSquare() {  
+    let nextMouthCol;
+    nextMouthCol = this.getSnakeMouthPos()[1] - 1
+    // Adjust for out of bounds right
+    if (nextMouthCol < 0 ) {
+      nextMouthCol = this.cols - 1
+    }
+    let nextMouth = [this.getSnakeMouthPos()[0], nextMouthCol]
     this.snake.pop(0)
     this.snake.unshift(nextMouth)
     console.log('left')
   }
 
   moveSnakeRightOneSquare() {
+    let nextMouthCol;
+    nextMouthCol = this.getSnakeMouthPos()[1] + 1
+    // Adjust for out of bounds right
+    if (nextMouthCol === this.cols) {
+      nextMouthCol = 0
+    }
     console.log('right')
-    let nextMouth = [this.getSnakeMouthPos()[0], this.getSnakeMouthPos()[1] + 1]
+    let nextMouth = [this.getSnakeMouthPos()[0], nextMouthCol]
     this.snake.pop(0)
     this.snake.unshift(nextMouth)
   }
 
   moveSnakeUpOneSquare() {
+    let nextMouthRow;
+    nextMouthRow = this.getSnakeMouthPos()[0] -1
+    if ((nextMouthRow) < 0) {
+      nextMouthRow = this.rows -1
+    }
     console.log('up')
-    let nextMouth = [this.getSnakeMouthPos()[0] - 1, this.getSnakeMouthPos()[1]] 
+    let nextMouth = [nextMouthRow, this.getSnakeMouthPos()[1]] 
     this.snake.pop(0)
     this.snake.unshift(nextMouth)
   }
 
   moveSnakeDownOneSquare() {
+    let nextMouthRow;
+    nextMouthRow = this.getSnakeMouthPos()[0] + 1
+    if (nextMouthRow === this.rows) {
+      nextMouthRow = 0
+    }
     console.log('down')
-    let nextMouth = [this.getSnakeMouthPos()[0] + 1, this.getSnakeMouthPos()[1]]
+    let nextMouth = [nextMouthRow, this.getSnakeMouthPos()[1]]
     this.snake.pop(0)
     this.snake.unshift(nextMouth)
   }
