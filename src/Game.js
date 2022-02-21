@@ -5,10 +5,11 @@ class Game {
     this.foodPos = [0,0]
     this.snake = []
     this.direction = null
+    this.points = 0
+    this.gameOver = false
   }
 
   generateMatrix() {
-    console.log('generating matrix')
     let snakeSet = new Set(this.snake.map(rc => rc.toString()))
     let matrix = Array(this.rows).fill().map((_,r) => {
       return Array(this.cols).fill().map((_,c) => {
@@ -100,29 +101,54 @@ class Game {
   }
 
   moveSnake() {
-    console.log('move snake')
     switch(this.direction) {
       case 'left':
         this.moveSnakeLeftOneSquare()
+        return this;
         break;
       case 'right':
         this.moveSnakeRightOneSquare()
+        return this;
         break;
       case 'up':
         this.moveSnakeUpOneSquare()
+        return this;
         break;
       case 'down':
         this.moveSnakeDownOneSquare()
+        return this;
         break;
       default:
-        return
+        return this;
     }   
   }
 
   evaluateGameState() {
-    // if head on food
-    // if head on snake
-    // else
+    if (this.snakeHeadOnFood()) {
+
+      console.log('snake on food')
+      this.incrementPoints()
+      this.setRandomFood()
+    } else if (this.snakeCollision()) {
+      this.gameOver = true;
+      console.log('GAME OVER!!!')
+    }
+  }
+
+  snakeHeadOnFood() {
+    return this.snake[0].toString() === this.foodPos.toString()
+  }
+
+  snakeCollision() {
+    // Check for snake colision
+  }
+
+  incrementPoints() {
+    this.points += 1
+  }
+
+  increaseSnakeLength() {
+
   }
 }
 

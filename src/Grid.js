@@ -57,10 +57,9 @@ const Grid = (props) => {
 
   useEffect(() => {
     setInterval(() => {
-      game.moveSnake()
+      game.moveSnake().evaluateGameState()
       setMatrix(game.generateMatrix())
       setGame(game)
-      console.log('matrix', game.generateMatrix())
       }, snakeSpeed)
   }, [])
 
@@ -245,9 +244,6 @@ const Grid = (props) => {
   }
 
   const handleKeyDown = (event) => {
-
-    console.log('newMatrix', game.generateMatrix())
-
     if (event.key.startsWith('Arrow')) {
       let newDirection
               
@@ -262,16 +258,12 @@ const Grid = (props) => {
       } else {
         newDirection = direction
       }
-      console.log('newDirection', newDirection)
       game.setDirection(newDirection)  
       setMatrix(game.generateMatrix())
       setGame(game)
     }
 }
 
-// game.setInitialSnakePosititon()
-
-console.log('matrix', game.generateMatrix())
   return (
     <div className="container" style={containerStyle}>
         <div className="col-12">
