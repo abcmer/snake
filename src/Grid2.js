@@ -11,7 +11,7 @@ const Grid = (props) => {
   // const [snake, setSnake] = useState([ [10, 10] ])
   // const [foodPos, setFoodPos] = useState([])
   const [direction, setDirection] = useState(null)
-  const [matrix, setMatrix] = useState(new Matrix())
+  const [matrix, setMatrix] = useState(new Matrix(gridSize[1], gridSize[0]))
   const [points, setPoints] = useState(0)
 
   useEffect(() => {
@@ -24,14 +24,12 @@ const Grid = (props) => {
   // // initialize Menu 
   // setMatrix(matrix)
   handleResize()
-  let matrix = new Matrix(gridSize[1], gridSize[0])
   // let matrix = new Matrix(gridSize[1], gridSize[0])
   matrix.setRandomFood()
   matrix.setInitialSnakePosititon()
-  console.log('matrix', matrix.generateMatrix())  
   document.addEventListener('keydown', handleKeyDown)
   window.addEventListener("resize", handleResize);
-  setMatrix(matrix)
+  // setMatrix(matrix)
   }, []);
 
   const handleResize = () => {
@@ -53,12 +51,11 @@ const Grid = (props) => {
     }
   }
 
-  // useEffect(() => {
-  //   setInterval(() => {
-  //     console.log('direction', direction)
-  //     moveSnake(direction)
-  //     }, snakeSpeed)
-  // }, [direction])
+  useEffect(() => {
+    setInterval(() => {
+      matrix.moveSnake()
+      }, 1000)
+  }, [])
 
   // useEffect(() => {
   //     moveSnake(direction)
@@ -244,23 +241,24 @@ const Grid = (props) => {
     if (event.key.startsWith('Arrow')) {
       let newDirection
 
-      let direction = direction;
+      // let direction = direction;
               
-      if (event.key  === 'ArrowRight' && direction !== 'Left') {
-        newDirection = 'Right'          
-      } else if (event.key === 'ArrowLeft' && direction !== 'Right') {          
-        newDirection = 'Left'        
-      } else if (event.key === 'ArrowUp' && direction !== 'Down') { 
-        newDirection = 'Up'         
-      } else if (event.key === 'ArrowDown' && direction !== 'Up') {          
-        newDirection = 'Down'        
+      if (event.key  === 'ArrowRight' && matrix.direction !== 'left') {      
+        newDirection = 'right'        
+      } else if (event.key === 'ArrowLeft' && matrix.direction !== 'right') {          
+        newDirection = 'left'           
+      } else if (event.key === 'ArrowUp' && matrix.direction !== 'down') {       
+        newDirection = 'up'               
+      } else if (event.key === 'ArrowDown' && matrix.direction !== 'up') {          
+        newDirection = 'down'        
       } else {
         newDirection = direction
       }
-      setDirection(newDirection)  
+      console.log('newDirection', newDirection)
+      matrix.setDirection(newDirection)  
     }
 }
-
+console.log('matrix', matrix)
   return (
     <div className="container" style={containerStyle}>
         <div className="col-12">

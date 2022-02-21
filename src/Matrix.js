@@ -4,22 +4,19 @@ class Matrix {
     this.cols = cols
     this.foodPos = [0,0]
     this.snake = []
-    this.snakeSquares = {}
+    this.direction = null
   }
 
   generateMatrix() {
-    console.log('this.foodPos', this.foodPos)
+    console.log('generating matrix')
     let snakeSet = new Set(this.snake.map(rc => rc.toString()))
     let matrix = Array(this.rows).fill().map((_,r) => {
       return Array(this.cols).fill().map((_,c) => {
         if ([r, c].toString() === this.foodPos.toString()) {
-          console.log('food')
           return 2 // 2 = food
         } else if (snakeSet.has([r,c].toString())) {
-          console.log('snake')
           return 1 // 1 = snake
         } else {
-          console.log('background')
           return 0 // 0 = background
         }          
         })
@@ -38,6 +35,78 @@ class Matrix {
 
   setInitialSnakePosititon() {
     this.snake.push([Math.floor(this.rows / 2), Math.floor(this.cols / 2)])
+  }
+
+  getSnakeMouthPos() {
+    return this.snake[0]
+  }
+
+  setNextMouth() {
+
+  }
+
+  moveSnakeLeftOneSquare() {    
+    let nextMouth = [this.getSnakeMouthPos()[0], this.getSnakeMouthPos()[1] - 1]
+    console.log('nextMouth', nextMouth)
+    this.snake.pop(0)
+    this.snake.unshift(nextMouth)
+    this.direction = 'left'
+    console.log('left')
+  }
+
+  moveSnakeRightOneSquare() {
+    console.log('right')
+    let nextMouth = [this.getSnakeMouthPos()[0], this.getSnakeMouthPos()[1] + 1]
+    this.snake.pop(0)
+    this.snake.unshift(nextMouth)
+    this.direction = 'right'
+  }
+
+  moveSnakeUpOneSquare() {
+    console.log('up')
+    let nextMouth = [this.getSnakeMouthPos()[0] - 1, this.getSnakeMouthPos()[1]] 
+    this.snake.pop(0)
+    this.snake.unshift(nextMouth)
+    this.direction = 'up'
+  }
+
+  moveSnakeDownOneSquare() {
+    console.log('down')
+    let nextMouth = [this.getSnakeMouthPos()[0] + 1, this.getSnakeMouthPos()[1]]
+    this.snake.pop(0)
+    this.snake.unshift(nextMouth)
+    this.direction = 'down'
+  }
+
+  setDirection(direction) {
+    this.direction = direction
+  }
+
+  moveSnake() {
+    console.log('move snake')
+    switch(this.direction) {
+      case 'left':
+        this.moveSnakeLeftOneSquare()
+        console.log(this.generateMatrix())
+        break;
+      case 'right':
+        this.moveSnakeRightOneSquare()
+        break;
+      case 'up':
+        this.moveSnakeUpOneSquare()
+        break;
+      case 'down':
+        this.moveSnakeDownOneSquare()
+        break;
+      default:
+        return
+    }   
+  }
+
+  evaluateGameState() {
+    // if head on food
+    // if head on snake
+    // else
   }
 }
 
