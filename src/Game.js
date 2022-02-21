@@ -1,4 +1,4 @@
-class Matrix {
+class Game {
   constructor(rows, cols) {
     this.rows = rows;
     this.cols = cols
@@ -47,10 +47,8 @@ class Matrix {
 
   moveSnakeLeftOneSquare() {    
     let nextMouth = [this.getSnakeMouthPos()[0], this.getSnakeMouthPos()[1] - 1]
-    console.log('nextMouth', nextMouth)
     this.snake.pop(0)
     this.snake.unshift(nextMouth)
-    this.direction = 'left'
     console.log('left')
   }
 
@@ -59,7 +57,6 @@ class Matrix {
     let nextMouth = [this.getSnakeMouthPos()[0], this.getSnakeMouthPos()[1] + 1]
     this.snake.pop(0)
     this.snake.unshift(nextMouth)
-    this.direction = 'right'
   }
 
   moveSnakeUpOneSquare() {
@@ -67,7 +64,6 @@ class Matrix {
     let nextMouth = [this.getSnakeMouthPos()[0] - 1, this.getSnakeMouthPos()[1]] 
     this.snake.pop(0)
     this.snake.unshift(nextMouth)
-    this.direction = 'up'
   }
 
   moveSnakeDownOneSquare() {
@@ -75,7 +71,6 @@ class Matrix {
     let nextMouth = [this.getSnakeMouthPos()[0] + 1, this.getSnakeMouthPos()[1]]
     this.snake.pop(0)
     this.snake.unshift(nextMouth)
-    this.direction = 'down'
   }
 
   setDirection(direction) {
@@ -87,7 +82,6 @@ class Matrix {
     switch(this.direction) {
       case 'left':
         this.moveSnakeLeftOneSquare()
-        console.log(this.generateMatrix())
         break;
       case 'right':
         this.moveSnakeRightOneSquare()
@@ -110,4 +104,4 @@ class Matrix {
   }
 }
 
-export default Matrix
+export default Game

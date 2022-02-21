@@ -1,21 +1,22 @@
 import React, { useState, useEffect }from "react";
 import Cell from './Cell'
-import Matrix from './Matrix'
+import Game from './Game'
 import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 const Grid = (props) => {
   const [cellSideLength, setCellSideLenth] = useState(Math.floor((window.innerWidth / 20)))
   const [gridSize, setGridSize] = useState([20, Math.floor(window.innerHeight / cellSideLength)])
-  // const [snakeSpeed, setSnakeSpeed] = useState(200)
+  const [snakeSpeed, setSnakeSpeed] = useState(200)
   // const [snake, setSnake] = useState([ [10, 10] ])
   // const [foodPos, setFoodPos] = useState([])
   const [direction, setDirection] = useState(null)
-  const [matrix, setMatrix] = useState(new Matrix(gridSize[1], gridSize[0]))
-  const [points, setPoints] = useState(0)
+  const [matrix, setMatrix] = useState([])
+  const [game, setGame] = useState(new Game(gridSize[1], gridSize[0]))
+  // const [points, setPoints] = useState(0)
 
   useEffect(() => {
-    // let matrix = new Matrix(gridSize[1], gridSize[0])
+    // let game = new Game(gridSize[1], gridSize[0])
     // matrix.setRandomFood()
     // console.log('matrix', matrix.generateMatrix())
   // let matrix = initializeMatrix(gridSize)
@@ -23,22 +24,25 @@ const Grid = (props) => {
   // matrix = setRandomFoodOnMatrix(matrix) 
   // // initialize Menu 
   // setMatrix(matrix)
-  handleResize()
+  // handleResize()
   // let matrix = new Matrix(gridSize[1], gridSize[0])
-  matrix.setRandomFood()
-  matrix.setInitialSnakePosititon()
-  document.addEventListener('keydown', handleKeyDown)
-  window.addEventListener("resize", handleResize);
-  // setMatrix(matrix)
+  // matrix.setRandomFood()
+  // matrix.setInitialSnakePosititon()
+    game.setRandomFood()
+    // game.setInitialSnakePosititon()
+    setGame(game)
+    document.addEventListener('keydown', handleKeyDown)
+    window.addEventListener("resize", handleResize);
+    setMatrix(game.generateMatrix())
   }, []);
 
   const handleResize = () => {
     calculateAndSetGridSize() 
-    let matrix = new Matrix(gridSize[1], gridSize[0])
+    let game = new Game(gridSize[1], gridSize[0])
     // let matrix = new Matrix(gridSize[1], gridSize[0])
-    matrix.setRandomFood()
-    matrix.setInitialSnakePosititon()
-    setMatrix(matrix)    
+    game.setRandomFood()
+    game.setInitialSnakePosititon()
+    setMatrix(game.generateMatrix())    
   }  
 
   const calculateAndSetGridSize = () => {
@@ -53,8 +57,11 @@ const Grid = (props) => {
 
   useEffect(() => {
     setInterval(() => {
-      matrix.moveSnake()
-      }, 1000)
+      game.moveSnake()
+      setMatrix(game.generateMatrix())
+      setGame(game)
+      console.log('matrix', game.generateMatrix())
+      }, snakeSpeed)
   }, [])
 
   // useEffect(() => {
@@ -218,7 +225,7 @@ const Grid = (props) => {
   const getGridItems = (matrix) => {
     return matrix.map((row, rIndex) => {
       return row.map((cellValue, cIndex) => {
-        return <Cell id={`${rIndex}${cIndex}`} sideLength={cellSideLength} row={rIndex} col={cIndex} cellValue={cellValue} />
+        return <Cell key={`${rIndex}${cIndex}`} id={`${rIndex}${cIndex}`} sideLength={cellSideLength} row={rIndex} col={cIndex} cellValue={cellValue} />
       })
     })
   }
@@ -238,10 +245,11 @@ const Grid = (props) => {
   }
 
   const handleKeyDown = (event) => {
+
+    console.log('newMatrix', game.generateMatrix())
+
     if (event.key.startsWith('Arrow')) {
       let newDirection
-
-      // let direction = direction;
               
       if (event.key  === 'ArrowRight' && matrix.direction !== 'left') {      
         newDirection = 'right'        
@@ -255,15 +263,20 @@ const Grid = (props) => {
         newDirection = direction
       }
       console.log('newDirection', newDirection)
-      matrix.setDirection(newDirection)  
+      game.setDirection(newDirection)  
+      setMatrix(game.generateMatrix())
+      setGame(game)
     }
 }
-console.log('matrix', matrix)
+
+game.setInitialSnakePosititon()
+
+console.log('matrix', game.generateMatrix())
   return (
     <div className="container" style={containerStyle}>
         <div className="col-12">
           <div className="grid-container" style={gridContainerStyle()} onKeyDown={handleKeyDown} >
-            {getGridItems(matrix.generateMatrix())}
+            {getGridItems(matrix)}
           </div>
         </div>          
     </div>      
