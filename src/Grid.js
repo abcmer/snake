@@ -5,7 +5,7 @@ import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 const Grid = (props) => {
-  const [cellSideLength, setCellSideLenth] = useState(Math.floor((window.innerWidth / 20)))
+  const [cellSideLength, setCellSideLenth] = useState((window.innerWidth / 20))
   const [gridSize, setGridSize] = useState([20, Math.floor(window.innerHeight / cellSideLength)])
   const [snakeSpeed, setSnakeSpeed] = useState(500)
   // const [snake, setSnake] = useState([ [10, 10] ])
@@ -57,7 +57,7 @@ const Grid = (props) => {
 
   useEffect(() => {
     setInterval(() => {
-      game.moveSnake().evaluateGameState()
+      game.moveSnake()
       setMatrix(game.generateMatrix())
       setGame(game)
       }, snakeSpeed)
@@ -245,18 +245,18 @@ const Grid = (props) => {
 
   const handleKeyDown = (event) => {
     if (event.key.startsWith('Arrow')) {
-      let newDirection
+      let newDirection = game.direction;
               
-      if (event.key  === 'ArrowRight' && matrix.direction !== 'left') {      
+      if (event.key  === 'ArrowRight' && game.direction !== 'left') {      
         newDirection = 'right'        
-      } else if (event.key === 'ArrowLeft' && matrix.direction !== 'right') {          
+      } else if (event.key === 'ArrowLeft' && game.direction !== 'right') {          
         newDirection = 'left'           
-      } else if (event.key === 'ArrowUp' && matrix.direction !== 'down') {       
+      } else if (event.key === 'ArrowUp' && game.direction !== 'down') {       
         newDirection = 'up'               
-      } else if (event.key === 'ArrowDown' && matrix.direction !== 'up') {          
+      } else if (event.key === 'ArrowDown' && game.direction !== 'up') {          
         newDirection = 'down'        
       } else {
-        newDirection = direction
+        // newDirection = direction
       }
       game.setDirection(newDirection)  
       setMatrix(game.generateMatrix())
@@ -264,6 +264,11 @@ const Grid = (props) => {
     }
 }
 
+if (game.gameOver) {
+  return(
+    <div>Game Over</div>
+  )
+}
   return (
     <div className="container" style={containerStyle}>
         <div className="col-12">

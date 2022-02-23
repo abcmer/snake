@@ -7,6 +7,7 @@ class Game {
     this.direction = null
     this.points = 0
     this.gameOver = false
+    this.nextMouth = []
   }
 
   generateMatrix() {
@@ -46,7 +47,7 @@ class Game {
 
   }
 
-  moveSnakeLeftOneSquare() {  
+  getMouthOneCellLeft() {  
     let nextMouthCol;
     nextMouthCol = this.getSnakeMouthPos()[1] - 1
     // Adjust for out of bounds right
@@ -54,12 +55,12 @@ class Game {
       nextMouthCol = this.cols - 1
     }
     let nextMouth = [this.getSnakeMouthPos()[0], nextMouthCol]
-    this.snake.pop(0)
-    this.snake.unshift(nextMouth)
     console.log('left')
+    return nextMouth
+    
   }
 
-  moveSnakeRightOneSquare() {
+  getMouthOneCellRight() {
     let nextMouthCol;
     nextMouthCol = this.getSnakeMouthPos()[1] + 1
     // Adjust for out of bounds right
@@ -68,11 +69,10 @@ class Game {
     }
     console.log('right')
     let nextMouth = [this.getSnakeMouthPos()[0], nextMouthCol]
-    this.snake.pop(0)
-    this.snake.unshift(nextMouth)
+    return nextMouth
   }
 
-  moveSnakeUpOneSquare() {
+  getMouthOneCellUp() {
     let nextMouthRow;
     nextMouthRow = this.getSnakeMouthPos()[0] -1
     if ((nextMouthRow) < 0) {
@@ -80,11 +80,10 @@ class Game {
     }
     console.log('up')
     let nextMouth = [nextMouthRow, this.getSnakeMouthPos()[1]] 
-    this.snake.pop(0)
-    this.snake.unshift(nextMouth)
+    return nextMouth
   }
 
-  moveSnakeDownOneSquare() {
+  getMouthOneCellDown() {
     let nextMouthRow;
     nextMouthRow = this.getSnakeMouthPos()[0] + 1
     if (nextMouthRow === this.rows) {
@@ -92,30 +91,29 @@ class Game {
     }
     console.log('down')
     let nextMouth = [nextMouthRow, this.getSnakeMouthPos()[1]]
-    this.snake.pop(0)
-    this.snake.unshift(nextMouth)
+    return nextMouth
   }
 
   setDirection(direction) {
     this.direction = direction
   }
 
-  moveSnake() {
-    switch(this.direction) {
+  determineNextMouth() {
+    switch(this.direction) {      
       case 'left':
-        this.moveSnakeLeftOneSquare()
+        this.nextMouth = this.getMouthOneCellLeft()
         return this;
         break;
       case 'right':
-        this.moveSnakeRightOneSquare()
+        this.nextMouth = this.getMouthOneCellRight()
         return this;
         break;
       case 'up':
-        this.moveSnakeUpOneSquare()
+        this.nextMouth = this.getMouthOneCellUp()
         return this;
         break;
       case 'down':
-        this.moveSnakeDownOneSquare()
+        this.nextMouth = this.getMouthOneCellDown()
         return this;
         break;
       default:
@@ -123,24 +121,39 @@ class Game {
     }   
   }
 
-  evaluateGameState() {
-    if (this.snakeHeadOnFood()) {
+  moveSnake() {
+    this.determineNextMouth(this.direction).processNextMove()
+  }
 
+  processNextMove() {
+    if (this.nextMouthOnFood()) {
       console.log('snake on food')
-      this.incrementPoints()
-      this.setRandomFood()
-    } else if (this.snakeCollision()) {
+      this.increaseSnakeLength()
+      this.setRandomFood()      
+      this.incrementPoints()      
+    } else if (this.futureSnakeCollison()) {
       this.gameOver = true;
       console.log('GAME OVER!!!')
+    } else if (!this.direction) {
+      console.log("don't move")      
+    } else {
+      this.regularSnakeMove()
     }
   }
 
-  snakeHeadOnFood() {
-    return this.snake[0].toString() === this.foodPos.toString()
+  nextMouthOnFood() {
+    return this.nextMouth.toString() === this.foodPos.toString()
   }
 
-  snakeCollision() {
-    // Check for snake colision
+  futureSnakeCollison() {
+    if (this.snake.length <= 1) {
+      return false
+    } else {
+      let snakeWithoutHead = this.snake.slice(0,this.snake.length - 1)
+      let snakeSet = new Set(snakeWithoutHead.map(rc => rc.toString()))
+      let snakeHead = this.nextMouth
+      return snakeSet.has(snakeHead.toString())
+    }
   }
 
   incrementPoints() {
@@ -148,7 +161,12 @@ class Game {
   }
 
   increaseSnakeLength() {
+    this.snake.push(this.foodPos)
+  }
 
+  regularSnakeMove() {
+    this.snake.pop(0)
+    this.snake.unshift(this.nextMouth)
   }
 }
 
