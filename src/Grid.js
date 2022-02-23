@@ -7,7 +7,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 const Grid = (props) => {
   const [cellSideLength, setCellSideLenth] = useState((window.innerWidth / 20))
   const [gridSize, setGridSize] = useState([20, Math.floor(window.innerHeight / cellSideLength)])
-  const [snakeSpeed, setSnakeSpeed] = useState(500)
+  // const [snakeSpeed, setSnakeSpeed] = useState(500)
   // const [snake, setSnake] = useState([ [10, 10] ])
   // const [foodPos, setFoodPos] = useState([])
   const [direction, setDirection] = useState(null)
@@ -60,7 +60,7 @@ const Grid = (props) => {
       game.moveSnake()
       setMatrix(game.generateMatrix())
       setGame(game)
-      }, snakeSpeed)
+      }, game.speed)
   }, [])
 
   // useEffect(() => {

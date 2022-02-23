@@ -7,7 +7,6 @@ const Cell = (props) => {
     let style = {
       backgroundColor: 'rgba(255, 255, 255, 0.8)',
       border: '0.025rem solid #7d13ff',
-      // paddingTop: '.4rem',
       fontSize: '.8rem',
       textAlign: 'center',
       height: `${sideLength}px`,
@@ -26,7 +25,7 @@ const Cell = (props) => {
   }
 
   return (
-    <div id={id} className="grid-item" style={cellStyle()}>({row},{col})</div>
+    <div id={id} className="grid-item" style={cellStyle()}></div>
   );
 }
 

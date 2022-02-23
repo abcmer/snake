@@ -8,6 +8,7 @@ class Game {
     this.points = 0
     this.gameOver = false
     this.nextMouth = []
+    this.speed = 500
   }
 
   generateMatrix() {
@@ -55,7 +56,6 @@ class Game {
       nextMouthCol = this.cols - 1
     }
     let nextMouth = [this.getSnakeMouthPos()[0], nextMouthCol]
-    console.log('left')
     return nextMouth
     
   }
@@ -67,7 +67,6 @@ class Game {
     if (nextMouthCol === this.cols) {
       nextMouthCol = 0
     }
-    console.log('right')
     let nextMouth = [this.getSnakeMouthPos()[0], nextMouthCol]
     return nextMouth
   }
@@ -78,7 +77,6 @@ class Game {
     if ((nextMouthRow) < 0) {
       nextMouthRow = this.rows -1
     }
-    console.log('up')
     let nextMouth = [nextMouthRow, this.getSnakeMouthPos()[1]] 
     return nextMouth
   }
@@ -89,7 +87,6 @@ class Game {
     if (nextMouthRow === this.rows) {
       nextMouthRow = 0
     }
-    console.log('down')
     let nextMouth = [nextMouthRow, this.getSnakeMouthPos()[1]]
     return nextMouth
   }
@@ -127,15 +124,14 @@ class Game {
 
   processNextMove() {
     if (this.nextMouthOnFood()) {
-      console.log('snake on food')
       this.increaseSnakeLength()
       this.setRandomFood()      
-      this.incrementPoints()      
+      this.incrementPoints()
+      this.increaseSnakeSpeed()
+      this.regularSnakeMove()    
     } else if (this.futureSnakeCollison()) {
       this.gameOver = true;
-      console.log('GAME OVER!!!')
-    } else if (!this.direction) {
-      console.log("don't move")      
+    } else if (!this.direction) {  
     } else {
       this.regularSnakeMove()
     }
@@ -162,6 +158,10 @@ class Game {
 
   increaseSnakeLength() {
     this.snake.push(this.foodPos)
+  }
+
+  increaseSnakeSpeed() {
+    this.speed += 500
   }
 
   regularSnakeMove() {
